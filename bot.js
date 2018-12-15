@@ -4,71 +4,30 @@ console.log('bot starting');
 var Twit = require('twit');
 
 var config = require('./config');
-
-//console.log(config);
-
-
-// marvel = new Marvel({ publicKey: "4f804381e438abd7d337fe90bec41e4a", privateKey: "4cf78151948baaac6f5f8a395d4f684bed49b27c"});
-
-// marvel.comics
-// 	.limit(3)
-// 	.get(function(err, res){
-// 		if(err){throw err}
-// 			res.forEach(function(ttl){
-// 			//console.log(ttl.title);
-// 			var rec = ttl.title;
-// 			console.log(rec);
-// 			return this.title; 
-			
-// 		})
-		
-// 		var d = res[1].title;
-// 		console.log(d); ////GOT A TITLE OUT!
-// 		// return this.next + this.send;
-// 	})
-
-//b = marvel.comics;
-// function (val) {
-//         this.param[k] = val
-//         return this
-//       }	 
-
-//console.log(b);
-
-// var recc = marvel.comics.res;
-// console.log("got here " + recc);
-
-var Marvel = require('marvel');
-
-marvel = new Marvel({ publicKey: "4f804381e438abd7d337fe90bec41e4a", privateKey: "4cf78151948baaac6f5f8a395d4f684bed49b27c"});
+var fetch = require("node-fetch");
 
 
+const api = 'https://gateway.marvel.com/v1/public/comics?format=comic&formatType=comic&noVariants=true&limit=50&ts=1&apikey=*****&hash=3f48596efa744b0886eb035edb7efc42';
+fetch(api)
+.then(function(response){
+	let data = response.json();
+	console.log('got here' + data);
+	return data;
+})
+.then(function(data){
+	let comicTitle = data["data"]["results"]["title"];
+	console.log('got here2' + comicTitle);
+	return comicTitle
+})
+.then(function(comicTitle){
+	var gotTitle = comicTitle;
+})
 
+///console.log(gotTitle);
 
-marvel.comics
-.limit(3)
-.get(function(err, res){
-	if(err){throw err}
-		res.forEach(function(ttl){
-			//console.log(ttl.title);
-			var rec = ttl.title;
-			console.log(rec);
-			return this.title; 
-			
-		})
-
-	var d = res[1].title;
-
-	console.log(d); ////GOT A TITLE OUT!
-	
-	return this.send;
-		
-	})
-
-console.log(marvel.comics);
-
-var tweet = {
-	status: marvel.comics
+function tweetRec(){
+	var tweet = {
+	status: "Today's recommendation:" + gotTitle;
 }
 
 var T = new Twit(config);
@@ -82,36 +41,9 @@ function tweeted(err, data, response) {
 		console.log("working")
 	}
 }
+}
 
-
-
-
-//var recommend = "Today's reconmmendation: " + rec;
-//console.log("getting rec " + recommend);
-	
-
-///this is a function that sets up how often the bot will tweet
-//will change to once a day later
-//setInterval(tweetRec, 1000*100*10);
-
-// function tweetRec(){
-
-// 	var r = Math.floor(Math.random()*100);
-
-// 	var tweet = {
-// 		status: recc
-// 	}
-
-// 	T.post('statuses/update', tweet, tweeted);
-
-// 	function tweeted(err, data, response) {
-// 		if(err){
-// 			console.log("Something is wrong")
-// 		}else{
-// 			console.log("working")
-// 		}
-// 	}
-// };
+setInterval(tweetRec, 1000*100*10);
 
 
 //testing search function here
@@ -134,13 +66,6 @@ function tweeted(err, data, response) {
 // }
 
 
-///tested the post function here, works well
-
-
-
-
-
-////installed an API wrapper for Marvel API by sawng (https://github.com/swang/marvel)
 
 
 
